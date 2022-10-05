@@ -21,7 +21,7 @@ struct TutorialDosView: View {
                 Text("Lorem Ipsum is simply dummy text of \nthe printing and typesetting industry.").font(.title3).fontWeight(.light)
                     .padding(.bottom,30)
                 
-                Spacer()
+                Spacer() 
                 Spacer()
             }
         }

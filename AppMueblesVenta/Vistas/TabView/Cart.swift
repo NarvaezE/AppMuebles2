@@ -29,7 +29,7 @@ struct Cart: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 25, height: 25)
                         }
-                    }
+                    }.padding(.horizontal)
                     HStack{
                         Text("25").font(.system(size: 35)).padding(.leading)
                         Text("% OFF").font(.system(size: 20))

@@ -9,9 +9,18 @@ import SwiftUI
 
 @main
 struct AppMueblesVentaApp: App {
+    
+    
+    @StateObject var authentication = Authenticate()
     var body: some Scene {
         WindowGroup{
-            SplashView()
+            if authentication.isValidated{
+                MainView()
+                    .environmentObject(authentication)
+            }else{
+                SignInView()
+                    .environmentObject(authentication)
+            }
         }
     }
 }

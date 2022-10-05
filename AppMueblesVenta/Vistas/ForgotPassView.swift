@@ -28,19 +28,17 @@ struct ForgotPassView: View {
                 
             }.padding(.horizontal,25)
             
-            NavigationLink(
-                destination: SignInView().navigationBarHidden(true),
-                label: {
-                    Text("Submit").font(.system(size: 20))
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color.white)
-                        .padding(22)
-                        .padding(.horizontal,122)
-                        .background(Color("main_color")
-                            .cornerRadius(40))
-                }
-            ).navigationBarHidden(true)
-                .navigationBarBackButtonHidden(true)
+            Button(action:{
+                apiCall().recoverPassword(e: email)
+            }, label: {
+                Text("Submit").font(.system(size: 20))
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color.white)
+                    .padding(22)
+                    .padding(.horizontal,122)
+                    .background(Color("main_color")
+                        .cornerRadius(40))
+            })
             
             Spacer()
         }

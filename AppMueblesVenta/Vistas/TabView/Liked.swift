@@ -15,6 +15,7 @@ struct Liked: View {
             ScrollView(.vertical,showsIndicators: false) {
                 VStack{
                     HStack{
+                        Spacer()
                         Text("Favorites")
                         Spacer()
                         Button{
@@ -27,7 +28,7 @@ struct Liked: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 25, height: 25)
                         }
-                    }
+                    }.padding(.horizontal)
                     
                     
                     if sharedData.likedProducts.isEmpty{

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SignUpView: View {
     @State var name: String = ""
+    @State var lastname: String = ""
     @State var email: String = ""
     @State var phone: String = ""
     @State var password: String = ""
@@ -19,8 +20,12 @@ struct SignUpView: View {
                     Text("Create a new Account!").font(.system(size: 25)).padding(.bottom,10)
                     Text("Please sign in to your \naccount").font(.system(size: 27)).fontWeight(.semibold)
                     
-                    TextField("Full Name",
+                    TextField("Name",
                               text:$name
+                    ).padding().background(Color("gris")).cornerRadius(20)
+                    
+                    TextField("Lastname",
+                              text:$lastname
                     ).padding().background(Color("gris")).cornerRadius(20)
                     
                     TextField("Email",
@@ -37,20 +42,17 @@ struct SignUpView: View {
                         .foregroundColor(Color.black)
                     Text("\n\n")
                 }
-                
-                NavigationLink(
-                    destination: MainView().navigationBarHidden(true),
-                    label: {
-                        Text("Sign Up").font(.system(size: 20))
-                            .fontWeight(.semibold)
-                            .foregroundColor(Color.white)
-                            .padding(22)
-                            .padding(.horizontal,110)
-                            .background(Color("main_color")
-                                .cornerRadius(40))
-                    }
-                ).navigationBarHidden(true)
-                    .navigationBarBackButtonHidden(true)
+                Button(action:{
+                    apiCall().register(n:name,l:lastname,e:email,p:phone,pw:password)
+                }, label: {
+                    Text("Sign Up").font(.system(size: 20))
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color.white)
+                        .padding(22)
+                        .padding(.horizontal,122)
+                        .background(Color("main_color")
+                            .cornerRadius(40))
+                })
                 
                 Button(action: {
                     

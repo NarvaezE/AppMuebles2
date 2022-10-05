@@ -38,8 +38,16 @@ struct HomeProductDetailView: View {
                             .foregroundColor(Color.black.opacity(0.7))
                     }
                     Spacer()
+                    
                     Text("Product")
                     Spacer()
+                    Button{
+                        
+                    } label: {
+                        Image(systemName: "plus.viewfinder")
+                            .font(.title2)
+                            .foregroundColor(Color.black.opacity(0.7))
+                    }
                     Button{
                         
                     } label: {
@@ -47,7 +55,7 @@ struct HomeProductDetailView: View {
                             .font(.title2)
                             .foregroundColor(Color.black.opacity(0.7))
                     }
-                }
+                }.padding(.horizontal)
                 TabView{
                     TabView{
                         Image(product.productImg[seleccionado]).resizable().scaledToFit()

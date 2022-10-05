@@ -11,7 +11,7 @@ class SharedHomeDataModel: ObservableObject {
     //Detail product data
     @Published var detailHomeProduct: Productos?
     @Published var showDetailHomeProducts: Bool = false
-    
+    @Published var showHome: Bool = false
     @Published var fromSearchPage:Bool = false
     
     //Liked products
