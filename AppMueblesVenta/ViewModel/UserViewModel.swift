@@ -10,10 +10,12 @@ import Foundation
 import FoundationNetworking
 #endif
 
-final class UserViewModel{
-    func loginTest(e:String,p:String) {
+final class UserViewModel: ObservableObject{
+    @Published var userModel: UserModel = .empty
+    @Published var userModelMapper: UserModelMapper = UserModelMapper()
+    
+    func loginTest(e:String,p:String){
         var semaphore = DispatchSemaphore (value: 0)
-
         let parameters = [
           [
             "key": "email",
@@ -70,9 +72,17 @@ final class UserViewModel{
                 //print(String(data: data, encoding: .utf8)!)
                 let dataModel = try JSONDecoder().decode(DataModelUser.self, from: data)
                 print("Token del usuario: \(dataModel.data.token)")
+            
+                return
+                DispatchQueue.main.async{
+                    self.userModel = self.userModelMapper.mapDataModelToModel(dataModel: dataModel)
+                    
+                }
             } catch {
                 print(error)
             }
+            
+            
             
           semaphore.signal()
         }

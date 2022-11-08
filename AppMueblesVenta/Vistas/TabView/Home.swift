@@ -9,14 +9,20 @@ import SwiftUI
 
 struct Home: View {
     var animation:Namespace.ID
-    @EnvironmentObject var sharedData: SharedHomeDataModel
-    
-    @StateObject var homeData: HomeViewModel = HomeViewModel()
+//    @EnvironmentObject var sharedData: SharedHomeDataModel
+//    @StateObject var user = UserViewModel()
+//    @StateObject var productos = ProductViewModel()
+//    @StateObject var homeData: HomeViewModel = HomeViewModel()
+    @State var userViewModel = UserViewModel()
+    @StateObject var cat = CategoryViewModel()
+    @StateObject var productos = ProductViewModel()
     var body: some View {
         NavigationView {
             
             ScrollView(.vertical) {
                 VStack{
+                    
+                    
                     HStack{
                         Button{
 //                            withAnimation(.easeInOut){
@@ -29,7 +35,12 @@ struct Home: View {
                         }
                         
                         Spacer()
-                        Text("Home")
+                        Text("Home").task {
+                            
+                            await productos.getProducts(token: "2755|N0a2n5NYMr3BWgcOJj2p39tFbzPDszFI2vH4AhW1")
+                            await cat.getCategories()
+                            
+                        }
                         Spacer()
                         Button{
                             
@@ -48,84 +59,132 @@ struct Home: View {
                     }.padding(.horizontal)
                     Image("banner_home").resizable().aspectRatio(contentMode: .fit).padding(.horizontal,30)
 
-                    ScrollView(.horizontal,showsIndicators: false) {
-                        HStack (spacing:16){
-                            ForEach(ProductTypeHome.allCases,id:\.self){type in
-                                ProductTypeView(type: type)
-                            }
-                        }.padding(.horizontal)
-                    }
+//                    ScrollView(.horizontal,showsIndicators: false) {
+//                        HStack (spacing:16){
+//                            ForEach(ProductTypeHome.allCases,id:\.self){type in
+//                                ProductTypeView(type: type)
+//                            }
+//                        }.padding(.horizontal)
+//                    }
+
+//                    LazyVGrid(columns: [GridItem(.fixed(200)),GridItem(.fixed(200))],content: {
+//
+//                          ForEach(homeData.filteredProductsHome){ product in
+//                               ProductHomeCardView(product:product)
+//                            }
+//                        })
+                    var prodList = productos.productModel
 
                     LazyVGrid(columns: [GridItem(.fixed(200)),GridItem(.fixed(200))],content: {
                         
-                          ForEach(homeData.filteredProductsHome){ product in
+                        ForEach(prodList){ product in
                                ProductHomeCardView(product:product)
                             }
                         })
                     
                     
                 }
-                .onChange(of: homeData.productType){ newValue in
-                    homeData.filterProductsHome()
+//                .onChange(of: homeData.productType){ newValue in
+//                    homeData.filterProductsHome()
             }
             }.navigationBarHidden(true)
         }
     }
-    @ViewBuilder
-    func ProductHomeCardView(product:Productos)->some View{
-        VStack(spacing: 10){
-            ZStack {
-                if sharedData.showDetailHomeProducts{
-                    Image(product.productImg[0])
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                }else{
-                    Image(product.productImg[0])
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .matchedGeometryEffect(id:
-                                    "\(product.id)IMAGE", in: animation)
-                }
-            }
-            VStack(alignment: .leading){
-                Text("New").font(.subheadline).foregroundColor(Color("main_color"))
-                Text(product.title).fontWeight(.medium)
-                Text(product.price)
-            }.padding()    
-        }.frame(width: 200,height: 300)
-            .background(Color("gris"))
-            .cornerRadius(20.0)
-            .shadow(color: Color.black.opacity(0.02), radius: 16, x: 16, y: 16)
-            .onTapGesture {
-                withAnimation(.easeInOut){
-                    sharedData.detailHomeProduct = product
-                    sharedData.showDetailHomeProducts = true
-                }
-            }
-    }
-    
-    @ViewBuilder
-    func ProductTypeView(type: ProductTypeHome)->some View{
-        Button{
-            withAnimation {
-                homeData.productType = type
-            }
-        }label:{
-            Text(type.rawValue).fontWeight(.medium)
-                .foregroundColor(homeData.productType == type ?
-                                 Color.white : Color.black)
-                .padding(10)
-                .padding(.horizontal)
-                .background(ZStack{
-                    homeData.productType == type ?
-                    Color("main_color") : Color.white
-                })
-                .cornerRadius(30).padding(.bottom).padding(.top)
-            .shadow(color: Color.black.opacity(0.16), radius: 16, x: 4, y: 4)
-                
+@ViewBuilder
+func ProductHomeCardView(product:DataClass)->some View{
+    VStack(spacing: 10){
+        ZStack {
+            AsyncImage(
+                url: URL(string: product.cover ?? "https://crud.jonathansoto.mx/storage/users/avatars/avantar.jpg"),
+                            content: { image in
+                                image.resizable()
+                                    .aspectRatio(contentMode: .fit)
+//                                    .matchedGeometryEffect(id:
+//                                                "\(product.id)IMAGE", in: animation)
+                            },
+                            placeholder: {
+                                ProgressView()
+                            }
+                        )
+//                Image(product.cover)
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .matchedGeometryEffect(id:
+//                                "\(product.id)IMAGE", in: animation)
+            
         }
-    }
+        VStack(alignment: .leading){
+            Text("New").font(.subheadline).foregroundColor(Color("main_color"))
+            Text(product.brand?.slug ?? "sin nombre").fontWeight(.medium)
+            Text("\(product.id ?? 08484)")
+            
+        }.padding()
+    }.frame(width: 200,height: 300)
+        .background(Color("gris"))
+        .cornerRadius(20.0)
+        .shadow(color: Color.black.opacity(0.02), radius: 16, x: 16, y: 16)
+//        .onTapGesture {
+//            withAnimation(.easeInOut){
+//                sharedData.detailHomeProduct = product
+//                sharedData.showDetailHomeProducts = true
+//            }
+//        }
 }
+//    @ViewBuilder
+//    func ProductHomeCardView(product:Productos)->some View{
+//        VStack(spacing: 10){
+//            ZStack {
+//                if sharedData.showDetailHomeProducts{
+//                    Image(product.productImg[0])
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                }else{
+//                    Image(product.productImg[0])
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .matchedGeometryEffect(id:
+//                                    "\(product.id)IMAGE", in: animation)
+//                }
+//            }
+//            VStack(alignment: .leading){
+//                Text("New").font(.subheadline).foregroundColor(Color("main_color"))
+//                Text(product.title).fontWeight(.medium)
+//                Text(product.price)
+//            }.padding()
+//        }.frame(width: 200,height: 300)
+//            .background(Color("gris"))
+//            .cornerRadius(20.0)
+//            .shadow(color: Color.black.opacity(0.02), radius: 16, x: 16, y: 16)
+//            .onTapGesture {
+//                withAnimation(.easeInOut){
+//                    sharedData.detailHomeProduct = product
+//                    sharedData.showDetailHomeProducts = true
+//                }
+//            }
+//    }
+     
+//    @ViewBuilder
+//    func ProductTypeView(type: ProductTypeHome)->some View{
+//        Button{
+//            withAnimation {
+//                homeData.productType = type
+//            }
+//        }label:{
+//            Text(type.rawValue).fontWeight(.medium)
+//                .foregroundColor(homeData.productType == type ?
+//                                 Color.white : Color.black)
+//                .padding(10)
+//                .padding(.horizontal)
+//                .background(ZStack{
+//                    homeData.productType == type ?
+//                    Color("main_color") : Color.white
+//                })
+//                .cornerRadius(30).padding(.bottom).padding(.top)
+//            .shadow(color: Color.black.opacity(0.16), radius: 16, x: 4, y: 4)
+//
+//        }
+//    }
+
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {

@@ -11,15 +11,15 @@ import SwiftUI
 struct AppMueblesVentaApp: App {
     
     
-    @StateObject var authentication = Authenticate()
+    @StateObject var authentication = Authentication()
     var body: some Scene {
         WindowGroup{
             if authentication.isValidated{
                 MainView()
                     .environmentObject(authentication)
             }else{
-                SignInView()
-                    .environmentObject(authentication)
+                MainView()
+                    
             }
         }
     }

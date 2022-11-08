@@ -12,7 +12,8 @@ struct SignInView: View {
     @State var email: String = ""
     @State var password: String = ""
     @EnvironmentObject var settings: UserSettings
-    @State var user = UserViewModel()
+    @StateObject var user = UserViewModel()
+    @StateObject var authentication = Authentication()
     
     var body: some View {
 //        if settings.isLoggedIn{
@@ -20,6 +21,7 @@ struct SignInView: View {
 //        }else{
             NavigationView {
                 VStack(alignment: .leading){
+                    Text(user.userModel.token)
                     Text("Welcome Back!").font(.system(size: 25)).padding(.bottom,10)
                     Text("Please sign in to your \naccount").font(.system(size: 27)).fontWeight(.semibold)
                     
@@ -40,12 +42,29 @@ struct SignInView: View {
                             
                         }
                     ).navigationBarHidden(true)
-                    
                     .navigationBarBackButtonHidden(true)
+                    
+                    
+                    NavigationLink(destination:
+                          user.userModel.token != "156|Q30eaB28Z4FCQhaN8FtNwUkks9pXotTSbXWjpXhs" ? AnyView(MainView())
+                        : user.userModel.token == "156|Q30eaB28Z4FCQhaN8FtNwUkks9pXotTSbXWjpXhs" ? AnyView(SignInView())
+                           : AnyView(EmptyView())
+                        ){
+                            Text("Sign In").font(.system(size: 20))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(Color.white)
+                                    .padding(22)
+                                    .padding(.horizontal,122)
+                                    .background(Color("main_color")
+                                        .cornerRadius(40))
+                        }.simultaneousGesture(TapGesture().onEnded{
+                            user.loginTest(e:email,p:password)
+                        }).navigationBarHidden(true)
+                        .navigationBarBackButtonHidden(true)
+                    
                     
                     Button(action:{
                         
-                        user.loginTest(e:email,p:password)
                     }, label: {
                         Text("Sign In").font(.system(size: 20))
                             .fontWeight(.semibold)
@@ -70,6 +89,7 @@ struct SignInView: View {
                         }.background(Color("google_color")
                             .cornerRadius(40))
                     })
+                    
                     HStack(alignment: .center){
                         Text("Don´t have an Account?")
                         
@@ -82,19 +102,11 @@ struct SignInView: View {
                         ).navigationBarHidden(true)
                     }.padding(.leading,45)
                     
-                    Spacer()
                     
                 }.padding(.horizontal,30)
-            }
+            }.navigationBarBackButtonHidden(true).navigationBarTitle("").navigationBarHidden(true)
         }
     
-    
-//    func updateValidation(success:Bool){
-//        var isValidated = false
-//        withAnimation{
-//            isValidated = success
-//        }
-//    }
 }
 
 class Authenticate: ObservableObject{
